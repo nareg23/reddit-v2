@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import {
   ChevronDownIcon,
   HomeIcon,
@@ -15,7 +16,6 @@ import {
   MegaphoneIcon,
   Bars3Icon,
 } from "@heroicons/react/24/outline";
-import { signIn, signOut, useSession } from "next-auth/react";
 
 const Header = () => {
   const { data: session } = useSession();
