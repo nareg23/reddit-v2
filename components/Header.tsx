@@ -15,8 +15,10 @@ import {
   MegaphoneIcon,
   Bars3Icon,
 } from "@heroicons/react/24/outline";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const Header = () => {
+  const { data: session } = useSession();
   return (
     <div className="flex sticky top-0 z-50 items-center bg-white  px-4 py-2 shadow-sm">
       {/* flex-shrink-0  to avoid collapsing on different screen sizes*/}
@@ -57,18 +59,44 @@ const Header = () => {
       <div className="ml-5 flex items-center lg:hidden">
         <Bars3Icon className="icon" />
       </div>
+
       {/* SignIN -- SignOUT */}
-      <div className=" items-center hidden lg:flex space-x-2 border border-gray-100 p-2   ">
-        <div className=" relative  overflow-hidden h-5 w-5">
-          <Image
-            src="/images/robot.png"
-            fill
-            alt="avatar"
-            style={{ objectFit: "contain" }}
-          />
+      {session ? (
+        <div
+          onClick={() => signOut()}
+          className="items-center hidden lg:flex space-x-2 border border-gray-100 p-2 cursor-pointer rounded-sm   "
+        >
+          <div className=" relative  overflow-hidden h-7 w-7">
+            <Image
+              src={session?.user?.image || "/images/robot.png"}
+              fill
+              alt="avatar"
+              style={{ objectFit: "contain" }}
+            />
+          </div>
+          <div className="text-sm flex-1">
+            <p className="truncate">{session?.user?.name}</p>
+            <p className="text-gray-400">1 Karma</p>
+          </div>
+          <ChevronDownIcon className="h-5 w-5 text-gray-400" />
         </div>
-        <p className="text-gray-400">Sign in</p>
-      </div>
+      ) : (
+        <div
+          onClick={() => signIn()}
+          className=" items-center hidden lg:flex space-x-2 border border-gray-100 p-2 cursor-pointer   "
+        >
+          <div className=" relative  overflow-hidden h-5 w-5">
+            <Image
+              src="/images/robot.png"
+              fill
+              alt="avatar"
+              style={{ objectFit: "contain" }}
+            />
+          </div>
+          <p className="text-gray-400">Sign in</p>
+        </div>
+      )}
+      {/* End SignIN -- SingOut */}
     </div>
   );
 };
