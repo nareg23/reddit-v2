@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
+import Feed from "../components/Feed";
 import Header from "../components/Header";
 import PostWindow from "../components/PostWindow";
 import styles from "../styles/Home.module.css";
@@ -12,6 +13,10 @@ export default function Home() {
       </Head>
       {/* POST WINDOW */}
       <PostWindow />
+      {/* Feed */}
+      <div className="flex">
+        <Feed />
+      </div>
     </div>
   );
 }

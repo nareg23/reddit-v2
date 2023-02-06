@@ -13,6 +13,7 @@ import INSERT_SUBREDDIT, {
   InsertSubredditTypes,
 } from "../graphql/mutations/addSubreddit";
 import toast from "react-hot-toast";
+import GET_ALL_POSTS from "../graphql/queries/getAllposts";
 
 type FormData = {
   postTitle: string;
@@ -24,7 +25,9 @@ type FormData = {
 const PostWindow = () => {
   const { data: session } = useSession();
   const [isImageBoxOpen, setIsImageBoxOpen] = useState(false);
-  const [inserPost] = useMutation(INSERT_POST);
+  const [inserPost] = useMutation(INSERT_POST, {
+    refetchQueries: [GET_ALL_POSTS, "getAllPosts"],
+  });
   const [insertSubreddit] = useMutation<InsertSubredditTypes>(INSERT_SUBREDDIT);
 
   const {
@@ -103,7 +106,7 @@ const PostWindow = () => {
     <form
       autoComplete="off"
       onSubmit={onSubmit}
-      className="sticky bg-white rounded-md top-16 p-2 border border-gray-300"
+      className="sticky bg-white rounded-md top-16 p-2 border border-gray-300 z-50"
     >
       <div className="flex items-center space-x-3">
         <Avatar />
