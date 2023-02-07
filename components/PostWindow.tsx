@@ -14,6 +14,7 @@ import INSERT_SUBREDDIT, {
 } from "../graphql/mutations/addSubreddit";
 import toast from "react-hot-toast";
 import GET_ALL_POSTS from "../graphql/queries/getAllposts";
+import GET_POSTS_BY_TOPIC from "../graphql/queries/getPostsbyTopic";
 
 type FormData = {
   postTitle: string;
@@ -26,11 +27,14 @@ type Props = {
   subreddit?: string;
 };
 
-const PostWindow = ({ subreddit }: Props) => {
+const PostWindow = ({ subreddit: incSubreddit }: Props) => {
   const { data: session } = useSession();
   const [isImageBoxOpen, setIsImageBoxOpen] = useState(false);
   const [inserPost] = useMutation(INSERT_POST, {
-    refetchQueries: [GET_ALL_POSTS, "getAllPosts"],
+    refetchQueries: incSubreddit
+      ? // For subreddit refetch
+        [{ query: GET_POSTS_BY_TOPIC }, "getPostsByTopic"]
+      : [{ query: GET_ALL_POSTS }, "getAllPosts"],
   });
   const [insertSubreddit] = useMutation<InsertSubredditTypes>(INSERT_SUBREDDIT);
 
@@ -46,18 +50,20 @@ const PostWindow = ({ subreddit }: Props) => {
     async ({ postBody, postImage, postTitle, subreddit: formSubreddit }) => {
       let _subredditId = undefined;
       const notify = toast.loading("Creating a new post...");
+
       try {
         const {
           data: { getSubredditListByTopic },
         } = await client.query<SubredditByTopicTypes>({
           query: GET_SUBREDDIT_BY_TOPIC,
+          fetchPolicy: "no-cache",
           variables: {
-            topic: subreddit || formSubreddit,
+            topic: incSubreddit || formSubreddit,
           },
         });
 
         //  subreddit check
-        const subredditExists = getSubredditListByTopic.length;
+        const subredditExists = getSubredditListByTopic.length > 0;
 
         // create if doesnt exist
         if (!subredditExists) {
@@ -121,8 +127,8 @@ const PostWindow = ({ subreddit }: Props) => {
           type="text"
           placeholder={
             session
-              ? subreddit
-                ? `Create a post in r/${subreddit}`
+              ? incSubreddit
+                ? `Create a post in r/${incSubreddit}`
                 : "Create a post!"
               : "Sign in to post"
           }
@@ -147,7 +153,7 @@ const PostWindow = ({ subreddit }: Props) => {
             />
           </div>
 
-          {!subreddit && (
+          {!incSubreddit && (
             <div className="flex items-center px-2">
               <p className="min-w-[90px]">Subreddit:</p>
               <input

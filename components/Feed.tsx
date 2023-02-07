@@ -12,15 +12,17 @@ type Props = {
 };
 
 const Feed = ({ topic }: Props) => {
-  const { data, error } = !topic
-    ? useQuery(GET_ALL_POSTS)
-    : useQuery(GET_POSTS_BY_TOPIC, {
-        variables: {
-          topic,
-        },
-      });
-  const posts: PostTypes[] = !topic ? data?.postList : data?.getPostsByTopic;
+  const { data, error } = useQuery(
+    !topic ? GET_ALL_POSTS : GET_POSTS_BY_TOPIC,
+    {
+      variables: {
+        topic,
+      },
+    }
+  );
 
+  console.log("posts", data);
+  const posts: PostTypes[] = topic ? data?.getPostsByTopic : data?.postList;
   return (
     <div className="mx-auto mt-5 space-y-4">
       {posts?.map((post) => {
