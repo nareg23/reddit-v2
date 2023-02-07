@@ -16,6 +16,7 @@ import {
   MegaphoneIcon,
   Bars3Icon,
 } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 const Header = () => {
   const { data: session } = useSession();
@@ -23,13 +24,15 @@ const Header = () => {
     <div className="flex sticky top-0 z-50 items-center bg-white  px-4 py-2 shadow-sm">
       {/* flex-shrink-0  to avoid collapsing on different screen sizes*/}
       <div className=" flex-shrink-0 cursor-pointer">
-        <Image
-          src={"/images/logo.png"}
-          alt={"logo"}
-          height={10}
-          width={80}
-          style={{ objectPosition: "center" }}
-        />
+        <Link href={"/"}>
+          <Image
+            src={"/images/logo.png"}
+            alt={"logo"}
+            height={10}
+            width={80}
+            style={{ objectPosition: "center" }}
+          />
+        </Link>
       </div>
       <div className="flex items-center mx-5 xl:min-w-[300px]">
         <HomeIcon className="h-5 w-5" />

@@ -11,7 +11,7 @@ const Avatar = ({ seed, large }: Props) => {
   const { data: session } = useSession();
   return (
     <div
-      className={`relative h-10 w-10 rounded-full border border-gray-50 bg-white overflow-hidden${
+      className={`relative h-10 w-10 rounded-full border border-gray-50 bg-white ${
         large && "h-20 w-20"
       }`}
     >
@@ -21,7 +21,7 @@ const Avatar = ({ seed, large }: Props) => {
         }.svg`}
         alt={"Avatar"}
         fill
-        style={{ objectFit: "fill" }}
+        style={{ objectFit: "contain" }}
       />
     </div>
   );

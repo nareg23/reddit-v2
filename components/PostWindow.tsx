@@ -22,7 +22,11 @@ type FormData = {
   subreddit: string;
 };
 
-const PostWindow = () => {
+type Props = {
+  subreddit?: string;
+};
+
+const PostWindow = ({ subreddit }: Props) => {
   const { data: session } = useSession();
   const [isImageBoxOpen, setIsImageBoxOpen] = useState(false);
   const [inserPost] = useMutation(INSERT_POST, {
@@ -39,7 +43,7 @@ const PostWindow = () => {
   } = useForm<FormData>();
 
   const onSubmit = handleSubmit(
-    async ({ postBody, postImage, postTitle, subreddit }) => {
+    async ({ postBody, postImage, postTitle, subreddit: formSubreddit }) => {
       let _subredditId = undefined;
       const notify = toast.loading("Creating a new post...");
       try {
@@ -48,7 +52,7 @@ const PostWindow = () => {
         } = await client.query<SubredditByTopicTypes>({
           query: GET_SUBREDDIT_BY_TOPIC,
           variables: {
-            topic: subreddit,
+            topic: subreddit || formSubreddit,
           },
         });
 
@@ -60,7 +64,7 @@ const PostWindow = () => {
           console.log("creating a new subreddit.");
           const { data } = await insertSubreddit({
             variables: {
-              topic: subreddit,
+              topic: formSubreddit,
             },
           });
           _subredditId = data?.insertSubreddit.id;
@@ -106,7 +110,7 @@ const PostWindow = () => {
     <form
       autoComplete="off"
       onSubmit={onSubmit}
-      className="sticky bg-white rounded-md top-16 p-2 border border-gray-300 z-50"
+      className="sticky bg-white rounded-md top-16 p-2 lg:top-20 border border-gray-300 z-50"
     >
       <div className="flex items-center space-x-3">
         <Avatar />
@@ -115,7 +119,13 @@ const PostWindow = () => {
           className="flex-1 bg-gray-50 p-2 pl-5 outline-none rounded-md"
           disabled={!session}
           type="text"
-          placeholder={session ? "Create a post!" : "Sign in to post"}
+          placeholder={
+            session
+              ? subreddit
+                ? `Create a post in r/${subreddit}`
+                : "Create a post!"
+              : "Sign in to post"
+          }
         />
         <PhotoIcon
           onClick={() => setIsImageBoxOpen(!isImageBoxOpen)}
@@ -137,15 +147,17 @@ const PostWindow = () => {
             />
           </div>
 
-          <div className="flex items-center px-2">
-            <p className="min-w-[90px]">Subreddit:</p>
-            <input
-              {...register("subreddit", { required: true })}
-              className={"m-2 flex-1 bg-blue-50 p-2 outline-none"}
-              type="text"
-              placeholder="i.e mildlyinteresting"
-            />
-          </div>
+          {!subreddit && (
+            <div className="flex items-center px-2">
+              <p className="min-w-[90px]">Subreddit:</p>
+              <input
+                {...register("subreddit", { required: true })}
+                className={"m-2 flex-1 bg-blue-50 p-2 outline-none"}
+                type="text"
+                placeholder="i.e mildlyinteresting"
+              />
+            </div>
+          )}
 
           {isImageBoxOpen && (
             <div className="flex items-center px-2">
