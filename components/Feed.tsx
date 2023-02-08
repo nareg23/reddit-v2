@@ -6,13 +6,14 @@ import GET_POSTS_BY_TOPIC, {
 } from "../graphql/queries/getPostsbyTopic";
 import Post from "./Post";
 import PostTypes from "../graphql/types/post";
+import { Pulsar } from "@uiball/loaders";
 
 type Props = {
   topic?: string;
 };
 
 const Feed = ({ topic }: Props) => {
-  const { data, error } = useQuery(
+  const { data, loading } = useQuery(
     !topic ? GET_ALL_POSTS : GET_POSTS_BY_TOPIC,
     {
       variables: {
@@ -21,10 +22,14 @@ const Feed = ({ topic }: Props) => {
     }
   );
 
-  console.log("posts", data);
   const posts: PostTypes[] = topic ? data?.getPostsByTopic : data?.postList;
   return (
-    <div className="mx-auto mt-5 space-y-4">
+    <div className="mx-auto lg:min-w-full mt-5 space-y-4">
+      {loading && (
+        <div className="flex justify-center mt-20">
+          <Pulsar size={70} speed={1.75} color="rgb(250 69 2)" />
+        </div>
+      )}
       {posts?.map((post) => {
         return <Post key={post.id} post={post} />;
       })}
