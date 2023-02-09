@@ -1,11 +1,15 @@
+import { useQuery } from "@apollo/client";
 import Head from "next/head";
-import Image from "next/image";
 import Feed from "../components/Feed";
-import Header from "../components/Header";
+import GET_SUBREDDITS from "../graphql/queries/getSubreddits";
+import Subreddit from "../graphql/types/subreddit";
 import PostWindow from "../components/PostWindow";
-import styles from "../styles/Home.module.css";
+import SubredditRow from "../components/SubredditRow";
 
 export default function Home() {
+  const { data, loading } = useQuery(GET_SUBREDDITS);
+
+  const subreddits: Subreddit[] = data?.getSubReddits;
   return (
     <div className="my-7 max-w-5xl mx-auto">
       <Head>
@@ -16,6 +20,18 @@ export default function Home() {
       {/* Feed */}
       <div className="flex">
         <Feed />
+        <div className="sticky top-36 mx-5 mt-5 hidden h-fit min-w-[300px] rounded-md border border-gray-300 bg-white lg:inline ">
+          <p className=" text-md mb-1 p-4 pb-3 font-bold">Top Communities</p>
+          <div>
+            {subreddits?.map((subreddit, i) => (
+              <SubredditRow
+                key={subreddit.id}
+                topic={subreddit.topic}
+                index={i}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

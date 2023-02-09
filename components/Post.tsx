@@ -50,11 +50,11 @@ const Post = ({ post }: Props) => {
           />
         </div>
         {/* End Votes */}
-        <div className="p-3 pb-1">
+        <div className="p-3 pb-1 truncate">
           {/* header */}
           <div className="flex items-center space-x-2">
             <Avatar seed={post?.subreddit[0]?.topic} />
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-400 truncate ">
               {isClient && (
                 <Link href={`/subreddit/${post?.subreddit[0]?.topic}`}>
                   <span className="font-bold text-black  hover:text-blue-400">
@@ -84,7 +84,7 @@ const Post = ({ post }: Props) => {
           <div className="flex space-x-4 text-gray-400">
             <div className="postButtons">
               <ChatBubbleLeftEllipsisIcon className="h-6 w-6" />
-              <p className="">{post.comments.length} Comments</p>
+              <p className="">{post?.comments.length} Comments</p>
             </div>
             <div className="postButtons">
               <GiftIcon className="h-6 w-6" />

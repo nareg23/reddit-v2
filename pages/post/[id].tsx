@@ -47,6 +47,11 @@ const PostPage = ({ post }: Props) => {
 
   const onSubmit: SubmitHandler<FormData> = async ({ comment }) => {
     const notify = toast.loading("Posting your comment...");
+
+    if (!session) {
+      toast("Please sign in to comment");
+      return;
+    }
     await insertComment({
       variables: {
         postId: post?.id,
@@ -83,7 +88,8 @@ const PostPage = ({ post }: Props) => {
             }
           ></textarea>
           <button
-            className="rounded-full p-3 bg-red-500 font-semibold text-white disabled::bg-gray-200"
+            disabled={!session}
+            className="rounded-full p-3 bg-red-500 font-semibold text-white disabled:bg-gray-200"
             type="submit"
           >
             Comment

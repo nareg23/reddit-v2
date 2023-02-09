@@ -21,7 +21,7 @@ import Link from "next/link";
 const Header = () => {
   const { data: session } = useSession();
   return (
-    <div className="flex sticky top-0 z-50 items-center bg-white  px-4 py-2 shadow-sm">
+    <div className="flex sticky top-0 z-50 items-center bg-white px-2  xs:px-4 py-2 shadow-sm">
       {/* flex-shrink-0  to avoid collapsing on different screen sizes*/}
       <div className=" flex-shrink-0 cursor-pointer">
         <Link href={"/"}>
@@ -35,9 +35,9 @@ const Header = () => {
         </Link>
       </div>
       <div className="flex items-center mx-5 xl:min-w-[300px]">
-        <HomeIcon className="h-5 w-5" />
+        <HomeIcon className="h-5 w-5 hidden xs:inline" />
         <p className="flex-1 ml-2 hidden lg:block">Home</p>
-        <ChevronDownIcon className="h-5 w-5" />
+        <ChevronDownIcon className="h-5 w-5 hidden xs:inline" />
       </div>
       {/* Search Bobx */}
       <form className="flex items-center space-x-2 border flex-1 border-gray-200 rounded-sm bg-gray-100 px-3 p-1">
@@ -49,6 +49,7 @@ const Header = () => {
         />
         <button hidden type="submit"></button>
       </form>
+
       <div className=" text-gray-500 space-x-2 items-center mx-5 hidden lg:inline-flex">
         <SparklesIcon className="icon" />
         <GlobeEuropeAfricaIcon className="icon" />
@@ -59,7 +60,7 @@ const Header = () => {
         <PlusIcon className="icon" />
         <MegaphoneIcon className="icon" />
       </div>
-      <div className="ml-5 flex items-center lg:hidden">
+      <div className="xs:ml-5 ml-2 flex items-center lg:hidden ">
         <Bars3Icon className="icon" />
       </div>
 
@@ -69,7 +70,7 @@ const Header = () => {
           onClick={() => signOut()}
           className="items-center hidden lg:flex space-x-2 border border-gray-100 p-2 cursor-pointer rounded-sm   "
         >
-          <div className=" relative  overflow-hidden h-7 w-7">
+          <div className=" relative overflow-hidden h-7 w-7">
             <Image
               src={session?.user?.image || "/images/robot.png"}
               fill
@@ -88,7 +89,7 @@ const Header = () => {
           onClick={() => signIn()}
           className=" items-center hidden lg:flex space-x-2 border border-gray-100 p-2 cursor-pointer   "
         >
-          <div className=" relative  overflow-hidden h-5 w-5">
+          <div className=" relative overflow-hidden h-5 w-5">
             <Image
               src="/images/robot.png"
               fill
