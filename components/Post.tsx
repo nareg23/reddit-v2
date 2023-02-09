@@ -12,10 +12,7 @@ import {
 import Avatar from "./Avatar";
 import TimeAgo from "react-timeago";
 import Link from "next/link";
-import { useQuery } from "@apollo/client";
-import GET_VOTES_BY_POST_ID from "../graphql/queries/getVoteByPostId";
-import { useSession } from "next-auth/react";
-import { toast } from "react-hot-toast";
+import useVote from "../hooks/useVote";
 
 type Props = {
   post: PostTypes;
@@ -23,25 +20,12 @@ type Props = {
 
 const Post = ({ post }: Props) => {
   const [isClient, setIsClient] = useState(false);
-  const [vote, setVote] = useState<boolean>();
-  const { data: session } = useSession();
-
-  const { data } = useQuery(GET_VOTES_BY_POST_ID, {
-    variables: {
-      postId: post.id,
-    },
-  });
-
-  const upvote = async (upvote) => {
-    if (!session) {
-      toast("Sign in to vote!");
-      return;
-    }
-  };
+  const { handleUpvote, userVote, voteCount } = useVote(post.id);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
   return (
     <Link className="block" href={`/post/${post?.id}`}>
       <div className="flex cursor-pointer rounded-md border  border-gray-300 bg-white shadow-sm hover:border-gray-600">
@@ -49,16 +33,20 @@ const Post = ({ post }: Props) => {
         <div className="flex flex-col items-center justify-start space-y-1 rounded-l-md bg-gray-50 p-4 text-gray-400">
           <ArrowUpIcon
             onClick={() => {
-              upvote(true);
+              handleUpvote(true);
             }}
-            className="voteButtons hover:text-blue-400"
+            className={`voteButtons hover:text-blue-400 ${
+              userVote?.upvote && "text-blue-400"
+            }`}
           />
-          <p className="text-black font-bold text-xs">0</p>
+          <p className="text-black font-bold text-xs">{voteCount}</p>
           <ArrowDownIcon
             onClick={() => {
-              upvote(false);
+              handleUpvote(false);
             }}
-            className="voteButtons hover:text-red-400"
+            className={`voteButtons hover:text-red-400 ${
+              userVote?.upvote === false && "text-red-400"
+            }`}
           />
         </div>
         {/* End Votes */}

@@ -34,7 +34,7 @@ const PostPage = ({ post }: Props) => {
     },
   });
   const comments: Comment[] = data?.getCommentByPostId;
-  console.log(comments);
+
   const {
     register,
     handleSubmit,
