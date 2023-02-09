@@ -16,21 +16,27 @@ import dynamic from "next/dynamic";
 import Comment from "../../graphql/types/comment";
 import { Pulsar } from "@uiball/loaders";
 
-type Props = {
-  post: PostType;
-};
-
 type FormData = {
   comment: string;
 };
 
-const PostPage = ({ post }: Props) => {
+const PostPage = () => {
   const DynamicTimeAgo = dynamic(() => import("react-timeago"));
+  const { query } = useRouter();
   const { data: session } = useSession();
+
+  const { data: postData } = useQuery(GET_POST_BY_ID, {
+    variables: {
+      id: query?.id,
+    },
+  });
+
+  const post = postData?.getPostById;
+  console.log(post);
 
   const { data, loading } = useQuery(GET_COMMENTS_BY_POST_ID, {
     variables: {
-      postId: post.id,
+      postId: query?.id,
     },
   });
   const comments: Comment[] = data?.getCommentByPostId;
@@ -42,7 +48,12 @@ const PostPage = ({ post }: Props) => {
     formState: { errors },
   } = useForm<FormData>();
   const [insertComment] = useMutation(INSERT_COMMENT, {
-    refetchQueries: [GET_COMMENTS_BY_POST_ID, "getCommentByPostId"],
+    refetchQueries: [
+      { query: GET_COMMENTS_BY_POST_ID },
+      "getCommentByPostId",
+      { query: GET_POST_BY_ID },
+      "getPostById",
+    ],
   });
 
   const onSubmit: SubmitHandler<FormData> = async ({ comment }) => {
@@ -135,33 +146,3 @@ const PostPage = ({ post }: Props) => {
 };
 
 export default PostPage;
-
-export const getStaticPaths: GetStaticPaths = () => {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { data } = await apolloClient.query({
-    query: GET_POST_BY_ID,
-    variables: {
-      id: params?.id,
-    },
-  });
-
-  const post = data?.getPostById;
-
-  if (!post) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: {
-      post,
-    },
-  };
-};

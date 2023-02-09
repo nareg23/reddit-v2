@@ -20,7 +20,7 @@ type Props = {
 
 const Post = ({ post }: Props) => {
   const [isClient, setIsClient] = useState(false);
-  const { handleUpvote, userVote, voteCount } = useVote(post.id);
+  const { handleUpvote, userVote, voteCount } = useVote(post?.id);
 
   useEffect(() => {
     setIsClient(true);
@@ -62,7 +62,7 @@ const Post = ({ post }: Props) => {
                   </span>
                 </Link>
               )}{" "}
-              . Posted by u/{post.username} <TimeAgo date={post.created_at} />
+              . Posted by u/{post?.username} <TimeAgo date={post?.created_at} />
             </p>
           </div>
           {/* body */}
@@ -76,9 +76,9 @@ const Post = ({ post }: Props) => {
             <p className="mt-2 text-sm font-light"></p>
           </div>
           {/* img */}
-          {post.image && (
+          {post?.image && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img className="w-full" src={post.image} alt={post.title} />
+            <img className="w-full" src={post?.image} alt={post?.title} />
           )}
           {/* footer */}
           <div className="flex space-x-4 text-gray-400">
