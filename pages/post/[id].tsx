@@ -32,7 +32,6 @@ const PostPage = () => {
   });
 
   const post = postData?.getPostById;
-  console.log(post);
 
   const { data, loading } = useQuery(GET_COMMENTS_BY_POST_ID, {
     variables: {

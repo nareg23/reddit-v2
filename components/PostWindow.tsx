@@ -67,7 +67,6 @@ const PostWindow = ({ subreddit: incSubreddit }: Props) => {
 
         // create if doesnt exist
         if (!subredditExists) {
-          console.log("creating a new subreddit.");
           const { data } = await insertSubreddit({
             variables: {
               topic: formSubreddit,
@@ -75,7 +74,6 @@ const PostWindow = ({ subreddit: incSubreddit }: Props) => {
           });
           _subredditId = data?.insertSubreddit.id;
         } else {
-          console.log("Subreddit already exists");
           _subredditId = getSubredditListByTopic[0]?.id;
         }
 
@@ -103,8 +101,6 @@ const PostWindow = ({ subreddit: incSubreddit }: Props) => {
           id: notify,
         });
       } catch (error: any) {
-        console.log(error.message);
-
         // toast
         toast.error("Oops something went wrong, please try again later.", {
           id: notify,
